@@ -1,6 +1,8 @@
+import asyncio
 import random
 from PIL import Image, ImageDraw, ImageFont
 import requests
+import music
 
 import discord
 
@@ -43,6 +45,23 @@ async def on_message(message):
         with open('quote.png', 'rb') as f:
             picture = discord.File(f)
             await message.channel.send(file=picture)
+
+    if message.content.startswith('!pogplay'):
+        link = message.content.split('!pogplay ', 1)[1]
+        mp3 = music.get_mp3(link)
+
+        voice_channel = message.author.voice.channel
+
+        if voice_channel is not None:
+            vc = await voice_channel.connect()
+
+            vc.play(discord.FFmpegPCMAudio(mp3), after=lambda e: print('done', e))
+
+            while not vc.is_done():
+                await asyncio.sleep(1)
+
+            vc.stop()
+            await vc.disconnect()
 
 
 client.run('ODgyNzg1NTgxNTk4Mzk2NDg4.YTAcJA.nYaVqzfdbth5arqKOKmTV12we18')
