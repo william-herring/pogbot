@@ -3,12 +3,16 @@ import random
 from PIL import Image, ImageDraw, ImageFont
 import requests
 import music
-
+import json
 import discord
 
 music_queue = []
 is_playing = False
 client = discord.Client()
+pogplay_enabled = False  # Set false if maintenance needed on pogplay
+
+with open("leaderboard.json", 'r') as file:
+    data = json.load(file)
 
 
 @client.event
@@ -50,7 +54,7 @@ async def on_message(message):
             picture = discord.File(f)
             await message.channel.send(file=picture)
 
-    if message.content.startswith('!pogplay'):
+    if message.content.startswith('!pogplay') and pogplay_enabled:
 
         link = message.content.split('!pogplay ', 1)[1]
         mp3 = music.get_mp3(link)
@@ -80,14 +84,39 @@ async def on_message(message):
                         is_playing = False
                         await vc.disconnect()
                         break
+                else:
+                    message.channel.send("The user must be in a voice channel.")
         else:
             message.channel.send("Added to queue")
             return
 
+    elif message.content.startswith('!pogplay') and not pogplay_enabled:
+        await message.channel.send("Pogplay is down right now. Come back later.")
+
+    if message.content.startswith("!queue"):
+        if len(music_queue) == 0:
+            message.channel.send("The queue is empty. Add a song by using the command !pogplay <YouTube link>")
+            return
+
+        message.channel.send("Current queue:")
+        for i in music_queue:
+            message.channel.send(i)
+
+    if "pog" in message.content:
+        if any(message.author.name in d for d in data):
+            data[0][message.author.name] = data[0][message.author.name] + 1
+        else:
+            entry = {message.author.name : 1}
+            data.append(entry)
+
+        with open("leaderboard.json", "w") as file:
+            json.dump(data, file)
+
+        await message.channel.send(message.author.name + " has " + str(data[0][message.author.name]) + " total pogs. To see the full leaderboard, type !leaderboard.")
+
 
 def get_playing_state():
     return is_playing
-
 
 
 client.run('ODgyNzg1NTgxNTk4Mzk2NDg4.YTAcJA.nYaVqzfdbth5arqKOKmTV12we18')
