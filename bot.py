@@ -9,7 +9,7 @@ import discord
 music_queue = []
 is_playing = False
 client = discord.Client()
-pogplay_enabled = False  # Set false if maintenance needed on pogplay
+pogplay_enabled = True  # Set false if maintenance needed on pogplay
 
 with open("leaderboard.json", 'r') as file:
     data = json.load(file)
@@ -102,7 +102,7 @@ async def on_message(message):
         for i in music_queue:
             message.channel.send(i)
 
-    if "pog" in message.content:
+    if "pog" in message.content and not message.content.startswith("!pogplay"):
         if any(message.author.name in d for d in data):
             data[0][message.author.name] = data[0][message.author.name] + 1
         else:
@@ -112,7 +112,7 @@ async def on_message(message):
         with open("leaderboard.json", "w") as file:
             json.dump(data, file)
 
-        await message.channel.send(message.author.name + " has " + str(data[0][message.author.name]) + " total pogs. To see the full leaderboard, type !leaderboard.")
+        await message.channel.send(message.author.name + " has " + str(data[0][message.author.name]) + " total pogs.")
 
 
 def get_playing_state():
