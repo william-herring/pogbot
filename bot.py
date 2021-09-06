@@ -5,6 +5,9 @@ import requests
 import music
 import json
 import discord
+from time import *
+
+ffmpeg_options = "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5"
 
 music_queue = []
 is_playing = False
@@ -60,35 +63,36 @@ async def on_message(message):
         mp3 = music.get_mp3(link)
 
         music_queue.append(mp3)
+        print(music_queue)
+        queue_id = music_queue.index(mp3)
 
         # adding to queue
 
         voice_channel = message.author.voice.channel
 
-        if not get_playing_state():
-            while len(music_queue) > 0:
-                if voice_channel is not None:
-                    is_playing = True
-                    vc = await voice_channel.connect()
+        await message.channel.send("Added to queue")
 
-                    vc.play(discord.FFmpegPCMAudio(music_queue[len(music_queue) - 1]), after=lambda e: print("done", e))
-                    message.channel.send("Now playing: " + str(music_queue[len(music_queue) - 1]))
+        while queue_id != 0:
+            sleep(5)
+            queue_id = music_queue.index(mp3)
+            print("waiting in queue with " + mp3)
 
-                    while not vc.is_done():
-                        await asyncio.sleep(1)
+        if voice_channel is not None:
+            vc = await voice_channel.connect()
+            vc.play(discord.FFmpegPCMAudio("/Users/herring/Development/pogbot/" + mp3), after=lambda e: print('done', e))
+            await message.channel.send("Now playing: " + mp3)
 
-                    vc.stop()
-                    music_queue.remove(0)
+            while vc.is_playing():
+                print("in loop")
+                await asyncio.sleep(1)
 
-                    if len(music_queue) == 0:
-                        is_playing = False
-                        await vc.disconnect()
-                        break
-                else:
-                    message.channel.send("The user must be in a voice channel.")
+            print("out of loop")
+            vc.stop()
+            await vc.disconnect()
+            music_queue.remove(mp3)
+            print(music_queue)
         else:
-            message.channel.send("Added to queue")
-            return
+            await client.say('User is not in a voice channel.')
 
     elif message.content.startswith('!pogplay') and not pogplay_enabled:
         await message.channel.send("Pogplay is down right now. Come back later.")
