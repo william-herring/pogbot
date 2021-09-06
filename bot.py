@@ -123,4 +123,4 @@ def get_playing_state():
     return is_playing
 
 
-client.run('ODgyNzg1NTgxNTk4Mzk2NDg4.YTAcJA.nYaVqzfdbth5arqKOKmTV12we18')
+client.run('ODgyNzg1NTgxNTk4Mzk2NDg4.YTAcJA.0bUiwgNPN-VgxVrH_n3XndrZjBE')
