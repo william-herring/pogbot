@@ -30,8 +30,8 @@ async def on_message(message):
 
     if message.content.startswith('!am i pog'):
 
-        if message.author.name == "Shrivyboi":
-            await message.channel.send("aryan is always pog")
+        if message.author.name == "coles car insurance":
+            await message.channel.send("william is always pog and you know it")
             return
 
         pog = random.choice(["not pog", "very pog"])
