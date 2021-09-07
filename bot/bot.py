@@ -14,7 +14,7 @@ is_playing = False
 client = discord.Client()
 pogplay_enabled = True  # Set false if maintenance needed on pogplay
 
-with open("leaderboard.json", 'r') as file:
+with open("/Users/herring/Development/pogbot/resources/leaderboard.json", 'r') as file:
     data = json.load(file)
 
 
@@ -53,7 +53,7 @@ async def on_message(message):
 
         img.save('quote.png')
 
-        with open('quote.png', 'rb') as f:
+        with open('/Users/herring/Development/pogbot/resources/quote.png', 'rb') as f:
             picture = discord.File(f)
             await message.channel.send(file=picture)
 
@@ -106,14 +106,24 @@ async def on_message(message):
         for i in music_queue:
             message.channel.send(i)
 
-    if "pog" in message.content and not message.content.startswith("!pogplay"):
-        if any(message.author.name in d for d in data):
-            data[0][message.author.name] = data[0][message.author.name] + 1
-        else:
-            entry = {message.author.name : 1}
-            data.append(entry)
+    if "pog" in message.content and not message.content.startswith("!"):
+        count = 0
+        for i in data:
+            for d in i.keys():
+                if d == message.author.name:
+                    data[count][message.author.name] = data[count][message.author.name] + 1
+                    with open("/Users/herring/Development/pogbot/resources/leaderboard.json", "w") as file:
+                        json.dump(data, file)
 
-        with open("leaderboard.json", "w") as file:
+                    await message.channel.send(message.author.name + " has " + str(data[0][message.author.name]) + " total pogs.")
+                    return
+
+            count += 1
+
+        entry = {message.author.name: 1}
+        data.append(entry)
+
+        with open("/Users/herring/Development/pogbot/resources/leaderboard.json", "w") as file:
             json.dump(data, file)
 
         await message.channel.send(message.author.name + " has " + str(data[0][message.author.name]) + " total pogs.")
