@@ -106,6 +106,11 @@ async def on_message(message):
         for i in music_queue:
             message.channel.send(i)
 
+    if message.content.startswith("!scold "):
+        target = message.content.split("!scold ", 1)[1]
+
+        await message.channel.send("Naughty " + target + ". Think about your actions and apologise.")
+
     if "pog" in message.content and not message.content.startswith("!"):
         count = 0
         for i in data:
