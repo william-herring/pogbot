@@ -109,7 +109,7 @@ async def on_message(message):
     if message.content.startswith("!scold "):
         target = message.content.split("!scold ", 1)[1]
 
-        await message.channel.send("Naughty " + target + ". Think about your actions and apologise.")
+        await message.channel.send("Very unpog of you, " + target + ". Think about your actions and apologise.")
 
     if "pog" in message.content and not message.content.startswith("!"):
         count = 0
