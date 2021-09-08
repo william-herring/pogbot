@@ -5,6 +5,7 @@ import requests
 import music
 import json
 import discord
+import game
 import spam_prevention
 from time import *
 
@@ -13,7 +14,7 @@ ffmpeg_options = "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5"
 music_queue = []
 is_playing = False
 client = discord.Client()
-root = open("../root_path_config.txt", 'r').read()
+root = open("root_path_config.txt", 'r').read()
 pogplay_enabled = True  # Set false if maintenance needed on pogplay
 
 with open(root + "/resources/leaderboard.json", 'r') as file:
@@ -29,6 +30,15 @@ async def on_ready():
 async def on_message(message):
     if message.author == client.user:
         return
+
+    if message.content.startswith("!help"):
+        await message.channel.send("You can use the following commands:")
+
+        await message.channel.send("!am i pog")
+        await message.channel.send("!cookie")
+        await message.channel.send("!quote <text>")
+        await message.channel.send("!scold <user>")
+        await message.channel.send("!pogplay <YouTube link>")
 
     if message.content.startswith('!am i pog'):
 
@@ -152,6 +162,10 @@ async def on_message(message):
                 key = d
 
             await message.channel.send(key + ":" + str(i[key]))
+
+    if message.content.startswith("!2048"):
+        await game.grid.send_grid(message)
+        await message.channel.send("Send w, a, s, d to specify direction")
 
 
 def get_playing_state():

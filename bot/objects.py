@@ -11,20 +11,18 @@ class Grid:
     def new_grid(self):
         rows = []
 
-        count = 0
         for x in range(self.size):
-            rows.append([])
+            r = " "
             for y in range(self.size):
-                rows[count].append(self.default_char + " ")
+                r += self.default_char + " "
 
-            count += 1
+            rows.append(r)
 
         return rows
 
-    def send_grid(self, ctx):
+    async def send_grid(self, ctx):
         for x in self.rows:
-            for y in x:
-                await ctx.channel.send(y)
+            await ctx.channel.send(x)
 
 
 class Tile:

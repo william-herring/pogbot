@@ -1,8 +1,10 @@
 from objects import *
 
+grid = Grid(4, ":white_large_square:")
+
 
 def main():
-    grid = Grid(4, ".")
+    return
 
 
 if __name__ == "__main__":
