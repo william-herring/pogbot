@@ -25,3 +25,11 @@ class Grid:
         for x in self.rows:
             for y in x:
                 await ctx.channel.send(y)
+
+
+class Tile:
+    def __init__(self, value):
+        self.num = value
+
+    def replace_num(self, new_value):
+        self.num = new_value
