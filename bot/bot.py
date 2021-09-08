@@ -5,6 +5,7 @@ import requests
 import music
 import json
 import discord
+import spam_prevention
 from time import *
 
 ffmpeg_options = "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5"
@@ -12,9 +13,10 @@ ffmpeg_options = "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5"
 music_queue = []
 is_playing = False
 client = discord.Client()
+root = open("../root_path_config.txt", 'r').read()
 pogplay_enabled = True  # Set false if maintenance needed on pogplay
 
-with open("/Users/herring/Development/pogbot/resources/leaderboard.json", 'r') as file:
+with open(root + "/resources/leaderboard.json", 'r') as file:
     data = json.load(file)
 
 
@@ -47,13 +49,13 @@ async def on_message(message):
             "https://images.unsplash.com/photo-1543157145-f78c636d023d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8Nnx8fGVufDB8fHx8&w=1000&q=80",
             stream=True).raw)
 
-        fnt = ImageFont.truetype('comic sans.ttf', 30)
+        fnt = ImageFont.truetype('../comic sans.TTF', 30)
         d = ImageDraw.Draw(img)
         d.text((250, 250), quote, font=fnt, fill=(255, 106, 0))
 
-        img.save('quote.png')
+        img.save(root + '/resources/quote.png')
 
-        with open('/Users/herring/Development/pogbot/resources/quote.png', 'rb') as f:
+        with open(root + '/resources/quote.png', 'rb') as f:
             picture = discord.File(f)
             await message.channel.send(file=picture)
 
@@ -78,8 +80,9 @@ async def on_message(message):
             print("waiting in queue with " + mp3)
 
         if voice_channel is not None:
+            print("connected")
             vc = await voice_channel.connect()
-            vc.play(discord.FFmpegPCMAudio("/Users/herring/Development/pogbot/" + mp3), after=lambda e: print('done', e))
+            vc.play(discord.FFmpegPCMAudio(root + "/bot/" + mp3), after=lambda e: print('done', e))
             await message.channel.send("Now playing: " + mp3)
 
             while vc.is_playing():
@@ -112,15 +115,21 @@ async def on_message(message):
         await message.channel.send("Very unpog of you, " + target + ". Think about your actions and apologise.")
 
     if "pog" in message.content and not message.content.startswith("!"):
+        if message.author.name in spam_prevention.pog_leaderboard_timeout:
+            await message.channel.send("You are currently in timeout for use of this command.")
+            return
+
         count = 0
         for i in data:
             for d in i.keys():
                 if d == message.author.name:
                     data[count][message.author.name] = data[count][message.author.name] + 1
-                    with open("/Users/herring/Development/pogbot/resources/leaderboard.json", "w") as file:
+                    with open(root + "/resources/leaderboard.json", "w") as file:
                         json.dump(data, file)
 
-                    await message.channel.send(message.author.name + " has " + str(data[0][message.author.name]) + " total pogs.")
+                    await message.channel.send(message.author.name + " has " + str(data[count][message.author.name]) + " total pogs.")
+
+                    await spam_prevention.timeout_user(message.author.name, "pog", 300)
                     return
 
             count += 1
@@ -128,10 +137,11 @@ async def on_message(message):
         entry = {message.author.name: 1}
         data.append(entry)
 
-        with open("/Users/herring/Development/pogbot/resources/leaderboard.json", "w") as file:
+        with open(root + "/resources/leaderboard.json", "w") as file:
             json.dump(data, file)
 
-        await message.channel.send(message.author.name + " has " + str(data[0][message.author.name]) + " total pogs.")
+        await message.channel.send(message.author.name + " has " + str(data[len(data) - 1][message.author.name]) + " total pogs.")
+        await spam_prevention.timeout_user(message.author.name, "pog", 300)
 
 
 def get_playing_state():
