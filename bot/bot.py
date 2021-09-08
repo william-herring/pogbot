@@ -143,9 +143,26 @@ async def on_message(message):
         await message.channel.send(message.author.name + " has " + str(data[len(data) - 1][message.author.name]) + " total pogs.")
         await spam_prevention.timeout_user(message.author.name, "pog", 300)
 
+    if message.content.startswith("!leaderboard"):
+        await message.channel.send("-LEADERBOARD-")
+
+        for i in data:
+            key = ""
+            for d in i.keys():
+                key = d
+
+            await message.channel.send(key + ":" + str(i[key]))
+
 
 def get_playing_state():
     return is_playing
+
+
+def sort_by(x):
+    try:
+        return int(x[1].split(' ')[0])
+    except ValueError:
+        return float('inf')
 
 
 client.run('ODgyNzg1NTgxNTk4Mzk2NDg4.YTAcJA.0bUiwgNPN-VgxVrH_n3XndrZjBE')
