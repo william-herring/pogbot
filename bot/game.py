@@ -14,6 +14,6 @@ async def start_game(ctx):
     y = random.randint(1, 4)
 
     print(x, y)
-    grid.plot_char(random.choice([two, four]), x, y)
+    grid.plot_char(random.choice([2, 4]), x, y)
     await grid.send_grid(ctx)
     await ctx.channel.send("Send w, a, s, d to specify direction")

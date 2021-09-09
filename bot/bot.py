@@ -14,7 +14,7 @@ ffmpeg_options = "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5"
 music_queue = []
 is_playing = False
 client = discord.Client()
-root = open("../root_path_config.txt", 'r').read()
+root = open("root_path_config.txt", 'r').read()
 pogplay_enabled = True  # Set false if maintenance needed on pogplay
 
 with open(root + "/resources/leaderboard.json", 'r') as file:
