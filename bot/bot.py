@@ -14,7 +14,7 @@ ffmpeg_options = "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5"
 music_queue = []
 is_playing = False
 client = discord.Client()
-root = open("root_path_config.txt", 'r').read()
+root = open("../root_path_config.txt", 'r').read()
 pogplay_enabled = True  # Set false if maintenance needed on pogplay
 
 with open(root + "/resources/leaderboard.json", 'r') as file:
@@ -53,6 +53,7 @@ async def on_message(message):
         await message.channel.send("🍪")
 
     if message.content.startswith('!quote'):
+
         quote = ('\"' + str(message.content.split("!quote", 1)[1]) + '\"' + " -" + str(message.author.name))
 
         img = Image.open(requests.get(
@@ -164,19 +165,11 @@ async def on_message(message):
             await message.channel.send(key + ":" + str(i[key]))
 
     if message.content.startswith("!2048"):
-        await game.grid.send_grid(message)
-        await message.channel.send("Send w, a, s, d to specify direction")
+        await game.start_game(message)
 
 
 def get_playing_state():
     return is_playing
-
-
-def sort_by(x):
-    try:
-        return int(x[1].split(' ')[0])
-    except ValueError:
-        return float('inf')
 
 
 client.run('ODgyNzg1NTgxNTk4Mzk2NDg4.YTAcJA.0bUiwgNPN-VgxVrH_n3XndrZjBE')

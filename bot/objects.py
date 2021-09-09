@@ -12,9 +12,9 @@ class Grid:
         rows = []
 
         for x in range(self.size):
-            r = " "
+            r = []
             for y in range(self.size):
-                r += self.default_char + " "
+                r.append(self.default_char + " ")
 
             rows.append(r)
 
@@ -22,7 +22,10 @@ class Grid:
 
     async def send_grid(self, ctx):
         for x in self.rows:
-            await ctx.channel.send(x)
+            await ctx.channel.send(list_to_str(x))
+
+    def plot_char(self, char, x, y):
+        self.rows[y - 1][x - 1] = char + " "
 
 
 class Tile:
@@ -31,3 +34,12 @@ class Tile:
 
     def replace_num(self, new_value):
         self.num = new_value
+
+
+def list_to_str(s):
+    str1 = ""
+
+    for ele in s:
+        str1 += ele
+
+    return str1
