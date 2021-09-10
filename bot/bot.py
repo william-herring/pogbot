@@ -17,7 +17,7 @@ client = discord.Client()
 root = open("root_path_config.txt", 'r').read()
 pogplay_enabled = True  # Set false if maintenance needed on pogplay
 
-with open(root + "/resources/leaderboard.json", 'r') as file:
+with open(root + "../resources/leaderboard.json", 'r') as file:
     data = json.load(file)
 
 
@@ -125,7 +125,7 @@ async def on_message(message):
 
         await message.channel.send("Very unpog of you, " + target + ". Think about your actions and apologise.")
 
-    if "pog" in message.content and not message.content.startswith("!"):
+    if " pog " in message.content and not message.content.startswith("!"):
         if message.author.name in spam_prevention.pog_leaderboard_timeout:
             await message.channel.send("You are currently in timeout for use of this command.")
             return
