@@ -15,6 +15,8 @@ ffmpeg_options = "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5"
 music_queue = []
 is_playing = False
 root = open("root_path_config.txt", 'r').read()
+admins = open("admins.txt", 'r').read().splitlines()
+pog_disabled_users = []
 pogplay_enabled = True  # Set false if maintenance needed on pogplay
 
 commands = ['!am i pog', '!cookie', 'quote <text>', 'scold <user>', 'pogplay <YouTube link>',]
@@ -61,7 +63,7 @@ class Client(discord.Client):
             "https://images.unsplash.com/photo-1543157145-f78c636d023d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8Nnx8fGVufDB8fHx8&w=1000&q=80",
             stream=True).raw)
 
-            fnt = ImageFont.truetype('../comic sans.TTF', 30)
+            fnt = ImageFont.truetype(root + '/comic sans.TTF', 30)
             d = ImageDraw.Draw(img)
             d.text((250, 250), quote, font=fnt, fill=(255, 106, 0))
 
@@ -127,6 +129,11 @@ class Client(discord.Client):
             await message.channel.send("Very unpog of you, " + target + ". Think about your actions and apologise.")
 
         if "pog" in message.content and not message.content.startswith("!"):
+            if message.author.name in pog_disabled_users:
+                await message.channel.send("I'm sorry, did you say something?")
+                await message.delete()
+                return
+
             if message.author.name in spam_prevention.pog_leaderboard_timeout:
                 await message.channel.send("You are currently in timeout for use of this command.")
                 return
@@ -165,11 +172,27 @@ class Client(discord.Client):
 
                 await message.channel.send(key + ":" + str(i[key]))
 
-        if message.content.startswith("!2048"):
-            await game.start_game(message)
+        if message.content.startswith("!disable ") and message.author.name in admins:
+            if message.content.split("!disable ", 1)[1] in pog_disabled_users:
+                await message.channel.send("This user is already disabled.")
+                return
+            pog_disabled_users.append(message.content.split("!disable ", 1)[1])
+            await message.channel.send(message.content.split("!disable ", 1)[1] + " can no longer pog.")
+        elif message.content.startswith("!disable ") and message.author.name not in admins:
+            await message.channel.send("You do not have permission to use this command.")
 
-        if message.content.startswith("I am pog ") and message.author.name == "Me Go Bonk":
-            await message.channel.send("Shut up Taj. You are not pog.")
+        if message.content.startswith("!enable ") and message.author.name in admins:
+            if message.content.split("!enable ", 1)[1] in pog_disabled_users:
+                pog_disabled_users.remove(message.content.split("!enable ", 1)[1])
+                await message.channel.send(message.content.split("!enable ", 1)[1] + " can pog again.")
+
+            else:
+                await message.channel.send("This user is already enabled.")
+        elif message.content.startswith("!enable ") and message.author.name not in admins:
+            await message.channel.send("You do not have permission to use this command.")
+
+        if message.content.startswith("I am pog") and message.author.name == "Me Go Bonk":
+            await message.channel.send("No you are not.")
 
         if message.content.startswith("!aryan"):
             await message.channel.send("https://cdn.discordapp.com/attachments/883246356687388736/887249767879544842/b4f8fba8-dc93-11eb-9660-0b62a055b768_image_hires_142428.png")
