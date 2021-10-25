@@ -19,7 +19,7 @@ admins = open("admins.txt", 'r').read().splitlines()
 pog_disabled_users = []
 pogplay_enabled = True  # Set false if maintenance needed on pogplay
 
-commands = ['!am i pog', '!cookie', 'quote <text>', 'scold <user>', 'pogplay <YouTube link>',]
+commands = ['!am i pog', '!cookie', 'quote <text>', 'scold <user>', '!leaderboard', 'pogplay <YouTube link>']
 
 with open(root + "/resources/leaderboard.json", 'r') as file:
     data = json.load(file)
