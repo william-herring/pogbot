@@ -8,10 +8,9 @@ As of 25/10/21, I no longer maintain pogbot. Feel free to clone and host yoursel
 To host pogbot for yourself, clone this repository and create a file called 
 tokens.py. Create a discord application and copy the token corresponding with
 the following code:
-<br>
-` token = 'enter token here'`
-<br>
-`def get_token():`
-<br>
-`return token`
 
+```py
+token = 'enter token here'
+def get_token():
+    return token
+```
