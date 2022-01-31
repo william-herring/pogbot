@@ -6,7 +6,7 @@ import os
 from dotenv import load_dotenv
 
 import db
-load_dotenv('.env')
+load_dotenv()
 
 
 class Client(discord.Client):
