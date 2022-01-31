@@ -6,7 +6,7 @@ import os
 from dotenv import load_dotenv
 
 import db
-load_dotenv()
+# load_dotenv()
 
 
 class Client(discord.Client):
@@ -86,4 +86,4 @@ class Client(discord.Client):
 
 
 client = Client()
-client.run(os.getenv('TOKEN'))
+client.run(os.environ.get('TOKEN'))
