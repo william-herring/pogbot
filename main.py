@@ -86,4 +86,4 @@ class Client(discord.Client):
 
 
 client = Client()
-client.run(os.getenv('TOKEN'))
+client.run(os.environ.get('TOKEN'))
