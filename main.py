@@ -4,9 +4,8 @@ import requests
 import random
 import os
 from dotenv import load_dotenv
-
 import db
-# load_dotenv()
+TOKEN = os.getenv("TOKEN")
 
 
 class Client(discord.Client):
@@ -86,4 +85,4 @@ class Client(discord.Client):
 
 
 client = Client()
-client.run(os.environ.get('TOKEN'))
+client.run(TOKEN)
