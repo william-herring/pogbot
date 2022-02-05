@@ -4,7 +4,10 @@ import requests
 import random
 import os
 from dotenv import load_dotenv
+import re
 import db
+
+load_dotenv()
 TOKEN = os.getenv("TOKEN")
 
 
@@ -63,6 +66,10 @@ class Client(discord.Client):
 
                 await message.channel.send(embed=embed)
 
+            if command.startswith("ur mum"):
+                response = requests.get("https://api.yomomma.info/")
+                await message.channel.send(str(response.json()["joke"]))
+
             if command == "rickroll":
                 choices = [
                     'Random article sourced from Google News: '
@@ -77,11 +84,11 @@ class Client(discord.Client):
                 await message.delete()
                 await message.channel.send(c)
 
-            if command.startswith("sus"):
-                await message.author.send("Did someone say sus 😱😱😱 ‼️‼️‼️‼️ IS THAT AN AMONG US REFERENCE????????"
-                                          "I PLAY AMONG US IT IS THE BEST GAME 🔥🔥🔥🔥💯💯💯💯 !!! "
-                                          "AMONG US? IMPOSTER IS RED!! I AM SUS! ANY SUS ? ANY SUS"
-                                          "NOT SUS I WAS VENTING 😂🤣😂🤣😂🤣😂😂😂🤣🤣🤣😂😂😂 ")
+        if "sus" in message.content:
+            await message.author.send("Did someone say sus 😱😱😱 ‼️‼️‼️‼️ IS THAT AN AMONG US REFERENCE????????"
+                                      "I PLAY AMONG US IT IS THE BEST GAME 🔥🔥🔥🔥💯💯💯💯 !!! "
+                                      "AMONG US? IMPOSTER IS RED!! I AM SUS! ANY SUS ? ANY SUS"
+                                      "NOT SUS I WAS VENTING 😂🤣😂🤣😂🤣😂😂😂🤣🤣🤣😂😂😂 ")
 
 
 client = Client()
