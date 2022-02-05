@@ -8,7 +8,7 @@ import re
 import db
 
 load_dotenv()
-TOKEN = os.getenv("TOKEN")
+TOKEN = os.environ["TOKEN"]
 
 
 class Client(discord.Client):
