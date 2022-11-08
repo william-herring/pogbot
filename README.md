@@ -1,3 +1,3 @@
 # pogbot
 
-Pogbot is no longer maintained.
+waiting to be acquired by microsoft
